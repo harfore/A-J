@@ -1,11 +1,17 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import images from "./imports/image-array";
 
-const Section = ({ image, index }: { image: any; index: number }) => {
+export interface ImageData {
+  type: "full" | "side";
+  src: string;
+  title?: string;
+  text?: string;
+}
+
+const Section = ({ image, index }: { image: ImageData; index: number }) => {
   return (
     <div className="section-wrapper">
       {/* single image */}
@@ -18,7 +24,7 @@ const Section = ({ image, index }: { image: any; index: number }) => {
             alt={`Image ${index + 1}`}
             className="h-3/4 max-w-full object-contain p-8 bg-white"
           />
-          <h1>{image.title}</h1>
+          {/* <h1>{image.title}</h1> */}
           {image.text && (
             <p className="max-w-lg md:ml-8 text-center md:text-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl">
               {image.text}
@@ -72,7 +78,7 @@ export default function Home() {
         A - J
       </div>
 
-      {images.map((image, index) => (
+      {images?.map((image, index) => (
         <Section key={index} image={image} index={index} />
       ))}
       <Footer />

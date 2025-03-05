@@ -1,31 +1,6 @@
-import image1 from "../../../public/images/page1.png";
-import image2 from "../../../public/images/page2.png";
-import image3 from "../../../public/images/page3.png";
-import image4 from "../../../public/images/page4.png";
-import image5 from "../../../public/images/page5.png";
-import image6 from "../../../public/images/page6.png";
-import image7 from "../../../public/images/page7.png";
-import image8 from "../../../public/images/page8.png";
-import image9 from "../../../public/images/page9.png";
-import image10 from "../../../public/images/page10.png";
-import image11 from "../../../public/images/page11.png";
-import image12 from "../../../public/images/page12.png";
-import image13 from "../../../public/images/page13.png";
-import image14 from "../../../public/images/page14.png";
-import image15 from "../../../public/images/page15.png";
-import image16 from "../../../public/images/page16.png";
-import image17 from "../../../public/images/page17.png";
-import image18 from "../../../public/images/page18.png";
-import image19 from "../../../public/images/page19.png";
-import image20 from "../../../public/images/page20.png";
-import image21 from "../../../public/images/page21.png";
-import image22 from "../../../public/images/page22.png";
-import image23 from "../../../public/images/page23.png";
-import image24 from "../../../public/images/page24.png";
-import image25 from "../../../public/images/page25.png";
-import image26 from "../../../public/images/page26.png";
+import { ImageData } from "../page";
 
-const images = [
+const images: ImageData[] = [
     { src: "/images/page1.png", type: "full", text: "" },
     { src: "/images/page2.png", type: "full", title: "PACK YOUR BODY", text: "Design, création et direction artistique. Vêtements inspirés d'emballage en carton, de corps et de dimensions, transformé en vêtements. Ce projet est réalisé en laine bouillie. Format Photos 2:3" },
     { src: "/images/page3.png", type: "side" },
