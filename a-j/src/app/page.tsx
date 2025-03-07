@@ -2,16 +2,20 @@
 import Image from "next/image";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import images from "./imports/image-array";
+import projects from "./imports/projects";
 
 export interface ImageData {
   type: "full" | "side";
   src: string;
-  title?: string;
-  text?: string;
 }
 
-const Section = ({ image, index }: { image: ImageData; index: number }) => {
+export interface ProjectData {
+  title?: string;
+  images: ImageData;
+  description?: string;
+}
+
+const Section = ({ project, image, index }: { project: ProjectData; image: ImageData; index: number }) => {
   return (
     <div className="section-wrapper">
       {/* single image */}
@@ -78,7 +82,7 @@ export default function Home() {
         A - J
       </div>
 
-      {images?.map((image, index) => (
+      {projects?.map((image, index) => (
         <Section key={index} image={image} index={index} />
       ))}
       <Footer />
