@@ -6,7 +6,9 @@ import images from "./imports/projects";
 
 export interface ImageData {
   src: string;
+  title?: string;
   type: "full" | "side";
+  text?: string;
 }
 
 export interface ProjectData {
