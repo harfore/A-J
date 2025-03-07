@@ -2,13 +2,17 @@
 import Image from "next/image";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import images from "./imports/image-array";
+import images from "./imports/projects";
 
 export interface ImageData {
-  type: "full" | "side";
   src: string;
+  type: "full" | "side";
+}
+
+export interface ProjectData {
   title?: string;
-  text?: string;
+  images: string;
+  description?: string;
 }
 
 const Section = ({ image, index }: { image: ImageData; index: number }) => {
