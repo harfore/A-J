@@ -8,6 +8,7 @@ import image1 from "../../public/images/page1.png";
 
 export interface ImageData {
   src: string;
+  type: "full" | "side";
 }
 
 export interface ProjectData {
@@ -59,7 +60,6 @@ const Section = ({
         </div>
       )}
 
-      {/* side-by-side images */}
       {/* side-by-side images */}
       {image.type === "side" && (
         <div className={`flex flex-col md:flex-row justify-center items-center p-20 mb-30 ${isFirstImage && project.description ? "gap-10" : "gap-80"}`}>
