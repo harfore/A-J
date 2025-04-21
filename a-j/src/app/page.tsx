@@ -8,7 +8,8 @@ import image1 from "../../public/images/page1.png";
 
 export interface ImageData {
   src: string;
-  type: "full" | "side";
+  type: "full" | "side" | "carousel";
+  typeIfMobile?: "full" | "side" | "carousel";
 }
 
 export interface ProjectData {
@@ -23,23 +24,49 @@ const Section = ({
   project,
   image,
   index,
-  afterPack,
 }: {
   project: ProjectData;
   image: ImageData;
   index: number;
-  afterPack: boolean;
 }) => {
   const isFirstImage = index === 0;
+  const [isMobile, setIsMobile] = useState(false);
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
 
-  if (image.type === "side" && index > 0 && project.images[index - 1]?.type === "side") {
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  useEffect(() => {
+    console.log(
+      `Rendering Section for image ${index}: type=${image.type}, mobile=${isMobile}`
+    );
+  }, [index, image.type, isMobile]);
+
+  // skip rendering if this is a secondary side image
+  // only rendering the carousel container once using the first image
+  if (
+    (image.type === "side" && index > 0 && project.images[index - 1]?.type === "side") ||
+    (isMobile && image.typeIfMobile === "carousel" && index > 0)
+  ) {
     return null;
   }
+
+
+  const carouselImages = project.images.filter(img => img.typeIfMobile === "carousel");
+
+  const nextImage = () => {
+    setCurrentCarouselIndex(prev => (prev + 1) % carouselImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentCarouselIndex(prev => (prev - 1 + carouselImages.length) % carouselImages.length);
+  };
 
   return (
     <div className="section-wrapper">
       {/* full image */}
-      {image.type === "full" && (
+      {image.type === "full" && !(isMobile && (image.typeIfMobile === "carousel")) && (
         <div className="section h-screen flex flex-col md:flex-row items-center justify-center bg-white px-8 gap-50">
           <Image
             width={600}
@@ -63,7 +90,7 @@ const Section = ({
       {/* side-by-side images */}
       {image.type === "side" && (
         <div className={`flex flex-col md:flex-row justify-center items-center p-20 mb-30 ${isFirstImage && project.description ? "gap-10" : "gap-80"}`}>
-          {/* First Image */}
+          {/* first image */}
           <Image
             width={300}
             height={175}
@@ -72,16 +99,16 @@ const Section = ({
             className="bg-white"
           />
 
-          {/* Description (if first image) */}
+          {/* description (if first image) */}
           {isFirstImage && project.description && (
             <div className="text-center md:text-left h-1/2">
-              <p className="max-w-lg md:ml-8" style={{ fontSize: "clamp(0.75rem, 2vw, 1.25rem)" }}>
+              <p className="max-w-lg md:ml-8 text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl">
                 {project.description}
               </p>
             </div>
           )}
 
-          {/* Second Image (if exists) */}
+          {/* second image (if exists) */}
           {project.images[index + 1]?.type === "side" && (
             <div className={`${isFirstImage && project.description ? "ml-10" : ""}`}>
               <Image
@@ -95,6 +122,37 @@ const Section = ({
           )}
         </div>
       )}
+
+      {/* carousel images for mobiles*/}
+      {image.typeIfMobile === "carousel" && index === 0 && (
+        <div className="md:hidden p-20 mb-30">
+          <div className="relative">
+            <Image
+              width={300}
+              height={175}
+              src={carouselImages[currentCarouselIndex].src}
+              alt={`Carousel Image ${currentCarouselIndex + 1}`}
+              className="bg-white mx-auto"
+            />
+            <div className="flex justify-center mt-4">
+              <button onClick={prevImage} className="px-4 py-2 bg-gray-200 rounded-l">
+                ←
+              </button>
+              <span className="px-4 py-2 bg-gray-100">
+                {currentCarouselIndex + 1}/{carouselImages.length}
+              </span>
+              <button onClick={nextImage} className="px-4 py-2 bg-gray-200 rounded-r">
+                →
+              </button>
+            </div>
+          </div>
+          <div className="text-center md:text-left overflow-hidden">
+            <p className="max-w-lg md:ml-8 overflow-hidden text-ellipsis text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+              {project.description}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -104,23 +162,23 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Get the first project element
+      // get the first project element
       const firstProject = document.getElementById("project-0");
       if (firstProject) {
-        // Check if the first project is out of view
+        // check if the first project is out of view
         const rect = firstProject.getBoundingClientRect();
         if (rect.bottom < 0) {
-          setShowAJ(false); // Hide "A - J" when the first project is scrolled out of view
+          setShowAJ(false); // hide "A - J" when the first project is scrolled out of view
         } else {
-          setShowAJ(true); // Show "A - J" when the first project is in view
+          setShowAJ(true); // show "A - J" before and when the first project is in view
         }
       }
     };
 
-    // Add scroll event listener
+    // scroll event listener
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup the event listener
+    // cleanup the event listener
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -148,7 +206,6 @@ export default function Home() {
 
       <div className="m-bottom-1/4">
         {projects?.map((project, projectIndex) => {
-          const afterPack = projectIndex >= 1;
           return (
             <div key={projectIndex} id={`project-${projectIndex}`}> {/* ID for scrolling */}
               {project.title && (
@@ -163,7 +220,6 @@ export default function Home() {
                   project={project as ProjectData}
                   image={image as ImageData}
                   index={imageIndex}
-                  afterPack={afterPack}
                 />
               ))}
             </div>
